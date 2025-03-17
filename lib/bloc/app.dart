@@ -1,6 +1,7 @@
 import 'package:bloc_suite/bloc_suite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'logic.dart';
 import '../common.dart';
 
@@ -61,7 +62,7 @@ class _HomeState extends State<Home> {
                 onDismissed: (_) {
                   f.remove(todos[i]);
                 },
-                child: TodoIdProvider(todo: todos[i], child: const TodoItem()),
+                child: RepositoryProvider.value(value: todos[i], child: const TodoItem()),
               ),
             ],
           ],
@@ -69,19 +70,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-}
-
-class TodoIdProvider extends InheritedWidget {
-  final Todo todo;
-  const TodoIdProvider({super.key, required this.todo, required super.child});
-  static TodoIdProvider of(BuildContext context) {
-    final result = context.dependOnInheritedWidgetOfExactType<TodoIdProvider>();
-    assert(result != null, 'No TodoIdProvider found in context');
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(TodoIdProvider oldWidget) => todo != oldWidget.todo;
 }
 
 class TodoItem extends StatefulWidget {
@@ -126,7 +114,7 @@ class _TodoItemState extends State<TodoItem> {
   @override
   Widget build(BuildContext context) {
     final f = context.read<TodosCubit>();
-    final todo = TodoIdProvider.of(context).todo;
+    final todo = context.watch<Todo>();
 
     print("build: TodoItem(${todo.id})");
     return Material(
@@ -172,7 +160,7 @@ class Toolbar extends BlocSelectorWidget<TodosCubit, TodosState, TodoListFilter>
   @override
   Widget build(context, bloc, filter) {
     final setFilter = context.read<TodosCubit>().setFilter;
-    print("build: Toolbar)");
+    print("build: Toolbar");
     return Material(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

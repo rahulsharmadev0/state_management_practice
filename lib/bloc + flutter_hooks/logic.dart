@@ -57,6 +57,5 @@ class TodosCubit extends Cubit<TodosState> {
 
   void emitCW({List<Todo>? todos, TodoListFilter? filter}) {
     emit((todos: todos ?? state.todos, filter: filter ?? state.filter));
-    print(state);
   }
 }

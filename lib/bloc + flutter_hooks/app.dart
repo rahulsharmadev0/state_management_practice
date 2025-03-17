@@ -45,7 +45,7 @@ class Home extends HookWidget {
                 onDismissed: (_) {
                   f.remove(todos[i]);
                 },
-                child: TodoIdProvider(todo: todos[i], child: const TodoItem()),
+                child: RepositoryProvider.value(value: todos[i], child: const TodoItem()),
               ),
             ],
           ],
@@ -55,19 +55,6 @@ class Home extends HookWidget {
   }
 }
 
-class TodoIdProvider extends InheritedWidget {
-  final Todo todo;
-  const TodoIdProvider({super.key, required this.todo, required super.child});
-  static TodoIdProvider of(BuildContext context) {
-    final result = context.dependOnInheritedWidgetOfExactType<TodoIdProvider>();
-    assert(result != null, 'No TodoIdProvider found in context');
-    return result!;
-  }
-
-  @override
-  bool updateShouldNotify(TodoIdProvider oldWidget) => todo != oldWidget.todo;
-}
-
 class TodoItem extends HookWidget {
   const TodoItem({super.key});
 
@@ -75,7 +62,7 @@ class TodoItem extends HookWidget {
   Widget build(BuildContext context) {
     final f = context.read<TodosCubit>();
     final itemFocusNode = useFocusNode();
-    final todo = TodoIdProvider.of(context).todo;
+    final todo = RepositoryProvider.of<Todo>(context, listen: true);
 
     final textFieldFocusNode = useFocusNode();
     final textEditingController = useTextEditingController();
