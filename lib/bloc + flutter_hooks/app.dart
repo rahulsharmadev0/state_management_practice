@@ -42,9 +42,7 @@ class Home extends HookWidget {
               if (i > 0) const Divider(height: 0),
               Dismissible(
                 key: ValueKey(todos[i].id),
-                onDismissed: (_) {
-                  f.remove(todos[i]);
-                },
+                onDismissed: (_) => f.remove(todos[i]),
                 child: RepositoryProvider.value(value: todos[i], child: const TodoItem()),
               ),
             ],
@@ -70,9 +68,7 @@ class TodoItem extends HookWidget {
 
     // Set up focus change effect
     useEffect(() {
-      void onFocusChange() {
-        itemIsFocused.value = itemFocusNode.hasFocus;
-      }
+      void onFocusChange() => itemIsFocused.value = itemFocusNode.hasFocus;
 
       itemFocusNode.addListener(onFocusChange);
       return () => itemFocusNode.removeListener(onFocusChange);
